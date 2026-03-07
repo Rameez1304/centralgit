@@ -35,12 +35,14 @@ export default function QRResult({ business, onReset }: Props) {
         <strong>Review Page:</strong> {reviewUrl}
       </p>
 
-      {business.qrDataUrl && (
+      {business.qrDataUrl ? (
         <img
           src={business.qrDataUrl}
           alt="QR Code"
           className="mb-4 w-[200px] h-[200px]"
         />
+      ) : (
+        <p>No QR available</p>
       )}
 
       {business.qrDataUrl && (
