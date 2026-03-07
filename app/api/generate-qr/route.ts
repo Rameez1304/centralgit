@@ -13,19 +13,31 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'All fields are required' }, { status: 400 })
     }
 
-    // Validate Google review link
     if (!google_review_link.startsWith('http')) {
-      return NextResponse.json({ error: 'Google review link must be a valid URL' }, { status: 400 })
+      return NextResponse.json(
+        { error: 'Google review link must be a valid URL' },
+        { status: 400 }
+      )
     }
 
     const slug = generateUniqueSlug(business_name)
-    const appUrl = process.env.NEXT_PUBLIC_APP_URL ?? 'http://localhost:3000'
+
+    const appUrl =
+      (process.env.NEXT_PUBLIC_APP_URL || 'https://www.alphabasline.com').replace(/\/$/, '')
+
     const reviewPageUrl = `${appUrl}/review/${slug}`
 
-    // Save to Supabase
+    console.log('QR URL:', reviewPageUrl)
+
     const { data: business, error: dbError } = await supabase
       .from('businesses')
-      .insert({ business_name, category, google_review_link, tone, slug })
+      .insert({
+        business_name,
+        category,
+        google_review_link,
+        tone,
+        slug,
+      })
       .select()
       .single()
 
@@ -34,15 +46,21 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'Failed to save business' }, { status: 500 })
     }
 
-    // Generate QR code as data URL
     const qrDataUrl = await QRCode.toDataURL(reviewPageUrl, {
       width: 400,
       margin: 2,
-      color: { dark: '#0D0D0D', light: '#FFFFFF' },
+      color: {
+        dark: '#0D0D0D',
+        light: '#FFFFFF',
+      },
       errorCorrectionLevel: 'H',
     })
 
-    const response: CreateBusinessResponse = { business, qrDataUrl }
+    const response: CreateBusinessResponse = {
+      business,
+      qrDataUrl,
+    }
+
     return NextResponse.json(response)
   } catch (err) {
     console.error('[generate-qr]', err)
