@@ -7,8 +7,10 @@ const openai = new OpenAI({
 
 export async function POST(req: NextRequest) {
   try {
+    console.log('KEY EXISTS:', !!process.env.OPENAI_API_KEY)
+
     const completion = await openai.chat.completions.create({
-      model: 'gpt-4o-mini',
+      model: 'gpt-4.1-mini',
       messages: [
         {
           role: 'user',
@@ -22,7 +24,10 @@ export async function POST(req: NextRequest) {
     return NextResponse.json({
       reviews: [text]
     })
-  } catch (err) {
+
+  } catch (err: any) {
+    console.error('FULL OPENAI ERROR:', err)
+
     return NextResponse.json({
       reviews: ['OPENAI_FAILED']
     })
