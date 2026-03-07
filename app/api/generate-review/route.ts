@@ -26,7 +26,7 @@ export async function POST(req: NextRequest) {
     })
 
   } catch (err: any) {
-    console.error('FULL OPENAI ERROR:', err)
+    console.error('FULL OPENAI ERROR:', JSON.stringify(err, null, 2))
 
     return NextResponse.json({
       reviews: ['OPENAI_FAILED']
