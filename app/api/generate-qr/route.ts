@@ -23,9 +23,9 @@ export async function POST(req: NextRequest) {
     const slug = generateUniqueSlug(business_name)
 
     const appUrl =
-      (process.env.NEXT_PUBLIC_APP_URL || 'https://www.alphabasline.com').replace(/\/$/, '')
+      (process.env.NEXT_PUBLIC_APP_URL || 'https://www.standeekart.com').replace(/\/$/, '')
 
-    const reviewPageUrl = `https://www.alphabasline.com/review/${slug}`
+    const reviewPageUrl = `https://www.standeekart.com/review/${slug}`
 
     console.log('QR URL:', reviewPageUrl)
 
