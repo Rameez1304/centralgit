@@ -1,30 +1,26 @@
 import { NextRequest, NextResponse } from 'next/server'
-import OpenAI from 'openai'
+import { GoogleGenAI } from '@google/genai'
 
-const openai = new OpenAI({
-  apiKey: process.env.OPENAI_API_KEY,
+const ai = new GoogleGenAI({
+  apiKey: process.env.GEMINI_API_KEY!,
 })
 
 export async function POST(req: NextRequest) {
   try {
-    console.log('KEY EXISTS:', !!process.env.OPENAI_API_KEY)
-
-    const response = await openai.responses.create({
-      model: 'gpt-4.1-mini',
-      input: 'Reply only with: OPENAI_WORKING_NOW'
+    const response = await ai.models.generateContent({
+      model: 'gemini-2.5-flash',
+      contents: 'Reply only with: GEMINI_WORKING_NOW'
     })
 
     return NextResponse.json({
-      reviews: [response.output_text]
+      reviews: [response.text]
     })
 
   } catch (err: any) {
-    console.error('ERROR MESSAGE:', err?.message)
-    console.error('ERROR STATUS:', err?.status)
-    console.error('ERROR NAME:', err?.name)
+    console.error('GEMINI ERROR:', err?.message)
 
     return NextResponse.json({
-      reviews: ['OPENAI_FAILED']
+      reviews: ['GEMINI_FAILED']
     })
   }
 }
