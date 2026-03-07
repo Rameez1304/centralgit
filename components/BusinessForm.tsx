@@ -67,14 +67,16 @@ export default function BusinessForm() {
     try {
       const res = await fetch('/api/generate-qr', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(form),
       })
 
       const data: CreateBusinessResponse = await res.json()
 
       if (!res.ok) {
-        throw new Error(data?.error ?? 'Failed to generate QR')
+        throw new Error('Failed to generate QR')
       }
 
       setResult(data)
