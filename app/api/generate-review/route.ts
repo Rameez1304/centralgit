@@ -9,24 +9,19 @@ export async function POST(req: NextRequest) {
   try {
     console.log('KEY EXISTS:', !!process.env.OPENAI_API_KEY)
 
-    const completion = await openai.chat.completions.create({
+    const response = await openai.responses.create({
       model: 'gpt-4.1-mini',
-      messages: [
-        {
-          role: 'user',
-          content: 'Reply only with: OPENAI_WORKING_NOW'
-        }
-      ]
+      input: 'Reply only with: OPENAI_WORKING_NOW'
     })
 
-    const text = completion.choices[0]?.message?.content || 'NO_RESPONSE'
-
     return NextResponse.json({
-      reviews: [text]
+      reviews: [response.output_text]
     })
 
   } catch (err: any) {
-    console.error('FULL OPENAI ERROR:', JSON.stringify(err, null, 2))
+    console.error('ERROR MESSAGE:', err?.message)
+    console.error('ERROR STATUS:', err?.status)
+    console.error('ERROR NAME:', err?.name)
 
     return NextResponse.json({
       reviews: ['OPENAI_FAILED']
