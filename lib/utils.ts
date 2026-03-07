@@ -10,6 +10,10 @@ export function generateSlug(name: string): string {
   )
 }
 
+export function generateUniqueSlug(name: string): string {
+  return generateSlug(name)
+}
+
 export function toneLabel(tone: string): string {
   switch (tone) {
     case 'friendly':
