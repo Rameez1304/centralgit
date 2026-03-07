@@ -27,7 +27,7 @@ export default function QRResult({ business, result, onReset }: Props) {
 
   const qrUrl =
     result?.qrCode ||
-    `https://www.alphabasline.com/review/${finalBusiness.slug}`
+    `https://www.standeekart.com/review/${finalBusiness.slug}`
 
   return (
     <div className="rounded-xl border p-6 shadow-sm bg-white">
