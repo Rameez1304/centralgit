@@ -13,7 +13,7 @@ export default function HomePage() {
                 <path d="M7 1L8.5 5H13L9.5 7.5L11 11.5L7 9L3 11.5L4.5 7.5L1 5H5.5L7 1Z" fill="white"/>
               </svg>
             </div>
-            <span className="font-semibold text-[15px] tracking-tight text-[#0D0D0D]">ReviewPilot</span>
+            <span className="font-semibold text-[15px] tracking-tight text-[#0D0D0D]">Standeekart</span>
           </div>
           <div className="hidden md:flex items-center gap-8">
             <a href="#how-it-works" className="text-sm text-[#888] hover:text-[#0D0D0D] transition-colors">How it works</a>
@@ -272,9 +272,9 @@ export default function HomePage() {
                 <path d="M7 1L8.5 5H13L9.5 7.5L11 11.5L7 9L3 11.5L4.5 7.5L1 5H5.5L7 1Z" fill="white"/>
               </svg>
             </div>
-            <span className="font-semibold text-sm text-[#0D0D0D]">ReviewPilot AI</span>
+            <span className="font-semibold text-sm text-[#0D0D0D]">Standeekart</span>
           </div>
-          <p className="text-sm text-[#888]">© {new Date().getFullYear()} ReviewPilot AI. Built to grow your reputation.</p>
+          <p className="text-sm text-[#888]">© {new Date().getFullYear()} Standeekart. Built to grow your reputation.</p>
           <div className="flex items-center gap-6">
             <a href="#" className="text-sm text-[#888] hover:text-[#0D0D0D] transition-colors">Privacy</a>
             <a href="#" className="text-sm text-[#888] hover:text-[#0D0D0D] transition-colors">Terms</a>
