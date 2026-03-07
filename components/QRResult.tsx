@@ -1,15 +1,5 @@
 import React from 'react'
-
-type Business = {
-  id?: string
-  business_name: string
-  category?: string
-  google_review_link?: string
-  tone?: string
-  slug: string
-  qrDataUrl?: string
-  reviewPageUrl?: string
-}
+import type { Business } from '@/types'
 
 type Props = {
   business?: Business
