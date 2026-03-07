@@ -11,7 +11,7 @@ type Business = {
 
 type CreateBusinessResponse = {
   business: Business
-  qrCode: string
+  qrCode?: string
 }
 
 type Props = {
