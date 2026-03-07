@@ -104,7 +104,7 @@ export default function CreatePage() {
       <nav className="fixed top-0 left-0 right-0 z-50 bg-paper/80 backdrop-blur-md border-b border-mist">
         <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
           <Link href="/" className="flex items-center gap-2">
-            <span className="font-display text-lg">ReviewPilot</span>
+            <span className="font-display text-lg">Standeekart</span>
             <span className="text-xs px-1.5 py-0.5 rounded bg-gold-light text-gold-dark font-semibold">
               AI
             </span>
