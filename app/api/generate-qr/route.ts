@@ -25,7 +25,7 @@ export async function POST(req: NextRequest) {
     const appUrl =
       (process.env.NEXT_PUBLIC_APP_URL || 'https://www.alphabasline.com').replace(/\/$/, '')
 
-    const reviewPageUrl = `${appUrl}/review/${slug}`
+    const reviewPageUrl = `https://www.alphabasline.com/review/${slug}`
 
     console.log('QR URL:', reviewPageUrl)
 
