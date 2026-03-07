@@ -2,11 +2,11 @@ import type { Metadata } from 'next'
 import './globals.css'
 
 export const metadata: Metadata = {
-  title: 'ReviewPilot AI — Turn Customer Scans Into Google Reviews',
+  title: 'Standeekart — Turn Customer Scans Into Google Reviews',
   description: 'Generate AI-powered QR codes that help customers leave Google reviews in seconds. Built for local businesses.',
   keywords: 'google reviews, QR code, AI reviews, review automation, local business',
   openGraph: {
-    title: 'ReviewPilot AI',
+    title: 'Standeekart',
     description: 'Turn Customer Scans Into Google Reviews',
     type: 'website',
   },
