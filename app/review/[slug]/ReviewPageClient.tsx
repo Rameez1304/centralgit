@@ -59,14 +59,21 @@ export default function ReviewPageClient({
   const handleCopyAndRedirect = async () => {
     await navigator.clipboard.writeText(review)
 
-    console.log('Google URL:', business?.google_review_url)
+    const googleLink =
+      business?.google_review_link || business?.google_review_url
 
-    if (business?.google_review_url) {
-      window.location.href = business.google_review_link
+    console.log('Business object:', business)
+    console.log('Google Link:', googleLink)
+
+    if (googleLink) {
+      window.location.href = googleLink
     } else {
       alert('Google review link missing')
     }
   }
+
+  const googleLink =
+    business?.google_review_link || business?.google_review_url
 
   return (
     <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow">
@@ -154,9 +161,9 @@ export default function ReviewPageClient({
                 Copy Review & Post on Google
               </button>
 
-              {business?.google_review_url && (
+              {googleLink && (
                 <a
-                  href={business.google_review_link}
+                  href={googleLink}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block mt-4 text-center text-blue-600 underline"
