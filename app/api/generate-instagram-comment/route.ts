@@ -10,32 +10,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json()
     const { businessName, category } = body
 
-    if (!businessName || !category) {
-      return NextResponse.json(
-        { error: 'Missing required fields' },
-        { status: 400 }
-      )
-    }
-
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
-      contents: `
-Write 5 short Instagram comments for "${businessName}", a ${category}.
-
-Rules:
-- natural human tone
-- 4 to 10 words
-- sound like real customers
-- vary each comment
-- no hashtags
-- return ONLY JSON array
-
-Example:
-["Loved this ❤️", "Looks amazing 🔥", "Need to visit soon", "Very nice vibe 👏", "So good ❤️"]
-      `,
+      contents: `Write 5 short Instagram comments for "${businessName}", a ${category}. Return ONLY JSON array.`,
     })
 
     const raw = response.text ?? '[]'
+
+    console.log('RAW GEMINI:', raw)
+
     const cleaned = raw.replace(/```json|```/g, '').trim()
 
     let comments: string[]
@@ -43,20 +26,18 @@ Example:
     try {
       comments = JSON.parse(cleaned)
     } catch {
-      const matches = cleaned.match(/"([^"]+)"/g)
-      comments = matches ? matches.map((s) => s.slice(1, -1)) : []
+      comments = ['Loved this ❤️', 'Looks amazing 🔥', 'Very nice 👏']
     }
 
     return NextResponse.json({
-      comments: comments.slice(0, 5),
+      comments,
     })
 
   } catch (err) {
-    console.error(err)
+    console.error('GEMINI ERROR:', err)
 
-    return NextResponse.json(
-      { error: 'Internal server error' },
-      { status: 500 }
-    )
+    return NextResponse.json({
+      comments: ['Loved this ❤️', 'Looks amazing 🔥', 'Very nice 👏']
+    })
   }
 }
