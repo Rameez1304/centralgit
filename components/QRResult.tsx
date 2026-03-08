@@ -25,9 +25,7 @@ export default function QRResult({ business, result, onReset }: Props) {
 
   if (!finalBusiness) return null
 
-  const qrUrl =
-    result?.qrCode ||
-    `https://www.standeekart.com/review/${finalBusiness.slug}`
+  const qrUrl = `https://www.standeekart.com/review/${finalBusiness.slug}`
 
   return (
     <div className="rounded-xl border p-6 shadow-sm bg-white">
@@ -38,7 +36,7 @@ export default function QRResult({ business, result, onReset }: Props) {
       </p>
 
       <p className="mb-4">
-        <strong>Review Page:</strong> /review/{finalBusiness.slug}
+        <strong>Review Page:</strong>
       </p>
 
       <img
@@ -47,10 +45,34 @@ export default function QRResult({ business, result, onReset }: Props) {
         className="mb-4"
       />
 
+      <div className="mt-4 text-center">
+        <p className="text-sm text-gray-500 mb-2">Shareable Review Link</p>
+
+        <div className="border rounded-lg p-3 bg-gray-50 break-all text-sm">
+          {qrUrl}
+        </div>
+
+        <button
+          onClick={() => navigator.clipboard.writeText(qrUrl)}
+          className="mt-3 w-full bg-black text-white py-2 rounded"
+        >
+          Copy Link
+        </button>
+
+        <a
+          href={qrUrl}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="block mt-3 text-blue-600 underline"
+        >
+          Open Link
+        </a>
+      </div>
+
       <a
         href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(qrUrl)}`}
         download
-        className="inline-block rounded-lg px-4 py-2 border mr-3"
+        className="inline-block rounded-lg px-4 py-2 border mr-3 mt-4"
       >
         Download QR
       </a>
@@ -58,7 +80,7 @@ export default function QRResult({ business, result, onReset }: Props) {
       {onReset && (
         <button
           onClick={onReset}
-          className="inline-block rounded-lg px-4 py-2 border"
+          className="inline-block rounded-lg px-4 py-2 border mt-4"
         >
           Create Another
         </button>
