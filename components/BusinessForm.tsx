@@ -2,19 +2,19 @@
 
 import { useState } from 'react'
 
-export default function ReviewFlow({
-  googleReviewUrl,
+export default function BusinessForm({
+  googleReviewUrl = '',
 }: {
-  googleReviewUrl: string
+  googleReviewUrl?: string
 }) {
   const [rating, setRating] = useState<number | null>(null)
   const [feedback, setFeedback] = useState('')
   const [review, setReview] = useState('')
 
-  const generateAIReview = () => {
-    if (rating === 4) {
+  const generateAIReview = (selectedRating: number) => {
+    if (selectedRating === 4) {
       setReview('Very good experience, staff was polite and service was smooth.')
-    } else if (rating === 5) {
+    } else if (selectedRating === 5) {
       setReview('Excellent experience! Highly recommended, great service and friendly staff.')
     }
   }
@@ -34,7 +34,6 @@ export default function ReviewFlow({
 
   return (
     <div className="max-w-md mx-auto p-6">
-
       {!rating && (
         <>
           <h2 className="text-xl font-bold mb-4">How was your experience?</h2>
@@ -45,7 +44,7 @@ export default function ReviewFlow({
                 key={star}
                 onClick={() => {
                   setRating(star)
-                  if (star >= 4) generateAIReview()
+                  if (star >= 4) generateAIReview(star)
                 }}
                 className="text-3xl"
               >
@@ -94,13 +93,16 @@ export default function ReviewFlow({
             Copy Review
           </button>
 
-          <a
-            href={googleReviewUrl}
-            target="_blank"
-            className="block mt-4 text-blue-600 underline"
-          >
-            Post on Google
-          </a>
+          {googleReviewUrl && (
+            <a
+              href={googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-4 text-blue-600 underline"
+            >
+              Post on Google
+            </a>
+          )}
         </div>
       )}
     </div>
