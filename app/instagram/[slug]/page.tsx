@@ -15,8 +15,6 @@ export default function InstagramSlugPage({
       const res = await fetch(`/api/instagram-link/${params.slug}`)
       const data = await res.json()
 
-      if (!data?.instagram_url) return
-
       setInstagramUrl(data.instagram_url)
 
       const ai = await fetch('/api/generate-instagram-comment', {
@@ -32,7 +30,11 @@ export default function InstagramSlugPage({
 
       const aiData = await ai.json()
 
-      setComments(aiData.comments || [])
+      setComments(aiData.comments || [
+        'Loved this ❤️',
+        'Looks amazing 🔥',
+        'Very nice 👏'
+      ])
     }
 
     load()
@@ -40,14 +42,6 @@ export default function InstagramSlugPage({
 
   function copyComment(text: string) {
     navigator.clipboard.writeText(text)
-  }
-
-  if (!instagramUrl) {
-    return (
-      <div className="min-h-screen flex items-center justify-center">
-        Loading...
-      </div>
-    )
   }
 
   return (
