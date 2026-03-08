@@ -2,7 +2,11 @@
 
 import { useState } from 'react'
 
-export default function ReviewPage() {
+export default function ReviewPageClient({
+  business,
+}: {
+  business: any
+}) {
   const [rating, setRating] = useState<number | null>(null)
   const [feedback, setFeedback] = useState('')
   const [review, setReview] = useState('')
@@ -22,6 +26,7 @@ export default function ReviewPage() {
       body: JSON.stringify({
         rating,
         feedback,
+        business: business?.name,
       }),
     })
 
@@ -33,7 +38,13 @@ export default function ReviewPage() {
 
       {!rating && (
         <>
-          <h2 className="text-xl font-bold mb-6 text-center">How was your experience?</h2>
+          <h2 className="text-xl font-bold mb-4 text-center">
+            {business?.name}
+          </h2>
+
+          <p className="text-center text-gray-500 mb-6">
+            How was your experience?
+          </p>
 
           <div className="flex justify-center gap-3">
             {[1, 2, 3, 4, 5].map((star) => (
@@ -54,7 +65,9 @@ export default function ReviewPage() {
 
       {rating && rating <= 3 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Tell us what went wrong</h3>
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            Tell us what went wrong
+          </h3>
 
           <textarea
             className="w-full border rounded p-2"
@@ -74,7 +87,9 @@ export default function ReviewPage() {
 
       {rating && rating >= 4 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2">Suggested Review</h3>
+          <h3 className="text-lg font-semibold mb-2 text-center">
+            Suggested Review
+          </h3>
 
           <textarea
             className="w-full border rounded p-2"
@@ -90,14 +105,16 @@ export default function ReviewPage() {
             Copy Review
           </button>
 
-          <a
-            href="YOUR_GOOGLE_REVIEW_LINK"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="block mt-4 text-center text-blue-600 underline"
-          >
-            Post on Google
-          </a>
+          {business?.googleReviewUrl && (
+            <a
+              href={business.googleReviewUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block mt-4 text-center text-blue-600 underline"
+            >
+              Post on Google
+            </a>
+          )}
         </div>
       )}
     </div>
