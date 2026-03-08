@@ -10,13 +10,33 @@ export default function ReviewPageClient({
   const [rating, setRating] = useState<number | null>(null)
   const [feedback, setFeedback] = useState('')
   const [review, setReview] = useState('')
+  const [loading, setLoading] = useState(false)
 
-  const generateAIReview = (selectedRating: number) => {
-    if (selectedRating === 4) {
-      setReview('Very good experience, staff was polite and service was smooth.')
-    } else if (selectedRating === 5) {
-      setReview('Excellent experience! Highly recommended, great service and friendly staff.')
+  const generateAIReview = async () => {
+    setLoading(true)
+
+    try {
+      const res = await fetch('/api/generate-review', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          businessName: business.business_name,
+          category: business.category,
+          tone: business.tone,
+        }),
+      })
+
+      const data = await res.json()
+
+      if (data.reviews && data.reviews.length > 0) {
+        setReview(data.reviews[0])
+      }
+    } catch (error) {
+      console.error(error)
+      setReview('Excellent experience! Highly recommended.')
     }
+
+    setLoading(false)
   }
 
   const submitFeedback = async () => {
@@ -50,9 +70,12 @@ export default function ReviewPageClient({
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
-                onClick={() => {
+                onClick={async () => {
                   setRating(star)
-                  if (star >= 4) generateAIReview(star)
+
+                  if (star >= 4) {
+                    await generateAIReview()
+                  }
                 }}
                 className="text-4xl hover:scale-110 transition"
               >
@@ -95,29 +118,35 @@ export default function ReviewPageClient({
             Suggested Review
           </h3>
 
-          <textarea
-            className="w-full border rounded p-2"
-            rows={4}
-            value={review}
-            onChange={(e) => setReview(e.target.value)}
-          />
+          {loading ? (
+            <p className="text-center text-gray-500">Generating AI review...</p>
+          ) : (
+            <>
+              <textarea
+                className="w-full border rounded p-2"
+                rows={4}
+                value={review}
+                onChange={(e) => setReview(e.target.value)}
+              />
 
-          <button
-            onClick={() => navigator.clipboard.writeText(review)}
-            className="mt-4 w-full bg-black text-white py-2 rounded"
-          >
-            Copy Review
-          </button>
+              <button
+                onClick={() => navigator.clipboard.writeText(review)}
+                className="mt-4 w-full bg-black text-white py-2 rounded"
+              >
+                Copy Review
+              </button>
 
-          {business?.google_review_url && (
-            <a
-              href={business.google_review_url}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="block mt-4 text-center text-blue-600 underline"
-            >
-              Post on Google
-            </a>
+              {business?.google_review_url && (
+                <a
+                  href={business.google_review_url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block mt-4 text-center text-blue-600 underline"
+                >
+                  Post on Google
+                </a>
+              )}
+            </>
           )}
         </div>
       )}
