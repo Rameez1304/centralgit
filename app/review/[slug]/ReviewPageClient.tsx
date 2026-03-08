@@ -23,6 +23,7 @@ export default function ReviewPageClient({
           businessName: business.business_name,
           category: business.category,
           tone: business.tone,
+          rating,
         }),
       })
 
@@ -30,6 +31,8 @@ export default function ReviewPageClient({
 
       if (data.reviews && data.reviews.length > 0) {
         setReview(data.reviews[0])
+      } else {
+        setReview('Excellent experience! Highly recommended.')
       }
     } catch (error) {
       console.error(error)
@@ -119,7 +122,10 @@ export default function ReviewPageClient({
           </h3>
 
           {loading ? (
-            <p className="text-center text-gray-500">Generating AI review...</p>
+            <div className="text-center py-6">
+              <div className="animate-spin inline-block text-3xl">⭐</div>
+              <p className="text-gray-500 mt-2">Generating AI review...</p>
+            </div>
           ) : (
             <>
               <textarea
