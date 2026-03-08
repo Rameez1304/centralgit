@@ -6,6 +6,7 @@ export default function InstagramPage() {
   const [postUrl, setPostUrl] = useState('')
   const [qrUrl, setQrUrl] = useState('')
   const [comment, setComment] = useState('')
+  const [loading, setLoading] = useState(false)
 
   const comments = [
     'Amazing post 🔥',
@@ -16,23 +17,36 @@ export default function InstagramPage() {
   ]
 
   async function generateQR() {
-    if (!postUrl) return
+    if (!postUrl.startsWith('http')) {
+      alert('Enter valid Instagram URL')
+      return
+    }
 
-    const res = await fetch('/api/generate-qr', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ url: postUrl })
-    })
+    setLoading(true)
 
-    const data = await res.json()
-    setQrUrl(data.qrCodeUrl)
+    try {
+      const res = await fetch('/api/generate-instagram-qr', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ url: postUrl })
+      })
+
+      const data = await res.json()
+      setQrUrl(data.qrDataUrl)
+    } catch (error) {
+      console.error(error)
+      alert('QR generation failed')
+    }
+
+    setLoading(false)
   }
 
   function generateComment() {
     const random =
       comments[Math.floor(Math.random() * comments.length)]
+
     setComment(random)
   }
 
@@ -58,7 +72,7 @@ export default function InstagramPage() {
         onClick={generateQR}
         className="bg-black text-white px-4 py-2 rounded mb-4"
       >
-        Generate QR
+        {loading ? 'Generating...' : 'Generate QR'}
       </button>
 
       {qrUrl && (
@@ -94,6 +108,7 @@ export default function InstagramPage() {
           <a
             href={postUrl}
             target="_blank"
+            rel="noopener noreferrer"
             className="bg-purple-600 text-white px-4 py-2 rounded"
           >
             Open Instagram
