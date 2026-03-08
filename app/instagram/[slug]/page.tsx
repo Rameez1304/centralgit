@@ -1,52 +1,59 @@
-'use client'
+import { supabase } from '@/lib/supabase'
 
-import { useState } from 'react'
+export default async function InstagramSlugPage({
+  params,
+}: {
+  params: { slug: string }
+}) {
+  const { data, error } = await supabase
+    .from('instagram_links')
+    .select('*')
+    .eq('slug', params.slug)
+    .single()
 
-export default function InstagramPage() {
-  const [postUrl, setPostUrl] = useState('')
-  const [qrUrl, setQrUrl] = useState('')
-
-  async function generateQR() {
-    const res = await fetch('/api/create-instagram', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({ url: postUrl })
-    })
-
-    const data = await res.json()
-    setQrUrl(data.qrDataUrl)
+  if (error || !data) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <h1 className="text-2xl font-bold mb-2">
+            Page not found
+          </h1>
+          <p>This QR code or page doesn't exist.</p>
+        </div>
+      </div>
+    )
   }
 
+  const comment = 'Loved this ❤️'
+
   return (
-    <div className="min-h-screen p-8 max-w-xl mx-auto">
-      <h1 className="text-3xl font-bold mb-6">
-        Instagram QR Generator
-      </h1>
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
+      <div className="max-w-md w-full border rounded-2xl p-8 shadow-lg">
+        <h1 className="text-2xl font-bold mb-4">
+          AI Suggested Comment
+        </h1>
 
-      <input
-        type="text"
-        value={postUrl}
-        onChange={(e) => setPostUrl(e.target.value)}
-        placeholder="Paste Instagram post URL"
-        className="w-full border p-3 rounded mb-4"
-      />
-
-      <button
-        onClick={generateQR}
-        className="bg-black text-white px-4 py-2 rounded mb-4"
-      >
-        Generate QR
-      </button>
-
-      {qrUrl && (
-        <img
-          src={qrUrl}
-          alt="QR"
-          className="w-56 h-56"
+        <textarea
+          readOnly
+          value={comment}
+          className="w-full border p-3 rounded mb-4"
         />
-      )}
+
+        <button
+          onClick={() => navigator.clipboard.writeText(comment)}
+          className="bg-green-600 text-white px-4 py-2 rounded mr-2"
+        >
+          Copy
+        </button>
+
+        <a
+          href={data.instagram_url}
+          target="_blank"
+          className="bg-purple-600 text-white px-4 py-2 rounded"
+        >
+          Open Instagram
+        </a>
+      </div>
     </div>
   )
 }
