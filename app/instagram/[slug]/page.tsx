@@ -17,23 +17,12 @@ export default function InstagramSlugPage({
 
       setInstagramUrl(data.instagram_url)
 
-      const ai = await fetch('/api/generate-instagram-comment', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        body: JSON.stringify({
-          businessName: data.business_name,
-          category: data.category
-        })
-      })
-
-      const aiData = await ai.json()
-
-      setComments(aiData.comments || [
+      setComments([
         'Loved this ❤️',
         'Looks amazing 🔥',
-        'Very nice 👏'
+        'Very nice 👏',
+        'Need to visit soon',
+        'Great vibe ❤️'
       ])
     }
 
