@@ -12,7 +12,7 @@ export default function ReviewPageClient({
   const [review, setReview] = useState('')
   const [loading, setLoading] = useState(false)
 
-  const generateAIReview = async () => {
+  const generateAIReview = async (selectedRating: number) => {
     setLoading(true)
 
     try {
@@ -23,7 +23,7 @@ export default function ReviewPageClient({
           businessName: business.business_name,
           category: business.category,
           tone: business.tone,
-          rating,
+          rating: selectedRating,
         }),
       })
 
@@ -56,6 +56,14 @@ export default function ReviewPageClient({
     alert('Thanks for your feedback')
   }
 
+  const handleCopyAndRedirect = async () => {
+    await navigator.clipboard.writeText(review)
+
+    if (business?.google_review_url) {
+      window.open(business.google_review_url, '_blank')
+    }
+  }
+
   return (
     <div className="max-w-md mx-auto mt-12 p-6 bg-white rounded-xl shadow">
 
@@ -77,7 +85,7 @@ export default function ReviewPageClient({
                   setRating(star)
 
                   if (star >= 4) {
-                    await generateAIReview()
+                    await generateAIReview(star)
                   }
                 }}
                 className="text-4xl hover:scale-110 transition"
@@ -136,10 +144,10 @@ export default function ReviewPageClient({
               />
 
               <button
-                onClick={() => navigator.clipboard.writeText(review)}
+                onClick={handleCopyAndRedirect}
                 className="mt-4 w-full bg-black text-white py-2 rounded"
               >
-                Copy Review
+                Copy Review & Post on Google
               </button>
 
               {business?.google_review_url && (
@@ -149,7 +157,7 @@ export default function ReviewPageClient({
                   rel="noopener noreferrer"
                   className="block mt-4 text-center text-blue-600 underline"
                 >
-                  Post on Google
+                  Open Google Review Page
                 </a>
               )}
             </>
