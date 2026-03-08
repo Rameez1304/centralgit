@@ -26,7 +26,7 @@ export default function ReviewPageClient({
       body: JSON.stringify({
         rating,
         feedback,
-        business: business?.name,
+        business: business?.business_name,
       }),
     })
 
@@ -38,12 +38,12 @@ export default function ReviewPageClient({
 
       {!rating && (
         <>
-          <h2 className="text-2xl font-bold mb-2 text-center">
-            {business?.name}
+          <h2 className="text-2xl font-bold text-center mb-2">
+            {business?.business_name}
           </h2>
 
           <p className="text-center text-gray-500 mb-6">
-            {business?.category || 'How was your experience?'}
+            {business?.category}
           </p>
 
           <div className="flex justify-center gap-3 mb-4">
@@ -69,7 +69,7 @@ export default function ReviewPageClient({
 
       {rating && rating <= 3 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2 text-center">
+          <h3 className="text-lg font-semibold text-center mb-2">
             Tell us what went wrong
           </h3>
 
@@ -91,7 +91,7 @@ export default function ReviewPageClient({
 
       {rating && rating >= 4 && (
         <div className="mt-6">
-          <h3 className="text-lg font-semibold mb-2 text-center">
+          <h3 className="text-lg font-semibold text-center mb-2">
             Suggested Review
           </h3>
 
@@ -109,9 +109,9 @@ export default function ReviewPageClient({
             Copy Review
           </button>
 
-          {business?.googleReviewUrl && (
+          {business?.google_review_url && (
             <a
-              href={business.googleReviewUrl}
+              href={business.google_review_url}
               target="_blank"
               rel="noopener noreferrer"
               className="block mt-4 text-center text-blue-600 underline"
