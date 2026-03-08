@@ -62,7 +62,7 @@ export default function ReviewPageClient({
     console.log('Google URL:', business?.google_review_url)
 
     if (business?.google_review_url) {
-      window.location.href = business.google_review_url
+      window.location.href = business.google_review_link
     } else {
       alert('Google review link missing')
     }
@@ -156,7 +156,7 @@ export default function ReviewPageClient({
 
               {business?.google_review_url && (
                 <a
-                  href={business.google_review_url}
+                  href={business.google_review_link}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="block mt-4 text-center text-blue-600 underline"
