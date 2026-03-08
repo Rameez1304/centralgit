@@ -9,21 +9,59 @@ export default function InstagramSlugPage({
 }) {
   const [instagramUrl, setInstagramUrl] = useState('')
   const [comments, setComments] = useState<string[]>([])
+  const [loading, setLoading] = useState(true)
 
   useEffect(() => {
     async function load() {
-      const res = await fetch(`/api/instagram-link/${params.slug}`)
-      const data = await res.json()
+      try {
+        const res = await fetch(`/api/instagram-link/${params.slug}`)
+        const data = await res.json()
 
-      setInstagramUrl(data.instagram_url)
+        if (!data?.instagram_url) {
+          setComments([
+            'Loved this ❤️',
+            'Looks amazing 🔥',
+            'Very nice 👏'
+          ])
+          setLoading(false)
+          return
+        }
 
-      setComments([
-        'Loved this ❤️',
-        'Looks amazing 🔥',
-        'Very nice 👏',
-        'Need to visit soon',
-        'Great vibe ❤️'
-      ])
+        setInstagramUrl(data.instagram_url)
+
+        const ai = await fetch('/api/generate-instagram-comment', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json'
+          },
+          body: JSON.stringify({
+            businessName: data.business_name,
+            category: data.category
+          })
+        })
+
+        const aiData = await ai.json()
+
+        setComments(
+          aiData.comments || [
+            'Loved this ❤️',
+            'Looks amazing 🔥',
+            'Very nice 👏',
+            'Need to visit soon',
+            'Great vibe ❤️'
+          ]
+        )
+      } catch {
+        setComments([
+          'Loved this ❤️',
+          'Looks amazing 🔥',
+          'Very nice 👏',
+          'Need to visit soon',
+          'Great vibe ❤️'
+        ])
+      } finally {
+        setLoading(false)
+      }
     }
 
     load()
@@ -31,6 +69,14 @@ export default function InstagramSlugPage({
 
   function copyComment(text: string) {
     navigator.clipboard.writeText(text)
+  }
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center text-lg">
+        Loading...
+      </div>
+    )
   }
 
   return (
@@ -43,7 +89,7 @@ export default function InstagramSlugPage({
         <div className="space-y-3">
           {comments.map((comment, i) => (
             <div key={i} className="border p-3 rounded">
-              <p className="mb-2">{comment}</p>
+              <p className="mb-3">{comment}</p>
 
               <button
                 onClick={() => copyComment(comment)}
