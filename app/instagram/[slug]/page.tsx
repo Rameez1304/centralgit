@@ -8,12 +8,14 @@ export default function InstagramSlugPage({
   params: { slug: string }
 }) {
   const [instagramUrl, setInstagramUrl] = useState('')
-  const [comment, setComment] = useState('')
+  const [comments, setComments] = useState<string[]>([])
 
   useEffect(() => {
     async function load() {
       const res = await fetch(`/api/instagram-link/${params.slug}`)
       const data = await res.json()
+
+      if (!data?.instagram_url) return
 
       setInstagramUrl(data.instagram_url)
 
@@ -23,44 +25,61 @@ export default function InstagramSlugPage({
           'Content-Type': 'application/json'
         },
         body: JSON.stringify({
-          businessName: data.business_name
+          businessName: data.business_name,
+          category: data.category
         })
       })
 
       const aiData = await ai.json()
-      setComment(aiData.comment)
+
+      setComments(aiData.comments || [])
     }
 
     load()
   }, [params.slug])
 
+  function copyComment(text: string) {
+    navigator.clipboard.writeText(text)
+  }
+
+  if (!instagramUrl) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        Loading...
+      </div>
+    )
+  }
+
   return (
-    <div className="min-h-screen flex items-center justify-center">
-      <div className="max-w-md w-full border rounded-xl p-8">
+    <div className="min-h-screen flex items-center justify-center bg-white px-6">
+      <div className="max-w-md w-full border rounded-2xl p-8 shadow-lg">
         <h1 className="text-2xl font-bold mb-4">
-          AI Suggested Comment
+          AI Suggested Comments
         </h1>
 
-        <textarea
-          value={comment}
-          readOnly
-          className="w-full border p-3 rounded mb-4"
-        />
+        <div className="space-y-3">
+          {comments.map((comment, i) => (
+            <div key={i} className="border p-3 rounded">
+              <p className="mb-2">{comment}</p>
 
-        <button
-          onClick={() => navigator.clipboard.writeText(comment)}
-          className="bg-green-600 text-white px-4 py-2 rounded mr-2"
-        >
-          Copy
-        </button>
+              <button
+                onClick={() => copyComment(comment)}
+                className="bg-green-600 text-white px-3 py-1 rounded mr-2"
+              >
+                Copy
+              </button>
 
-        <a
-          href={instagramUrl}
-          target="_blank"
-          className="bg-purple-600 text-white px-4 py-2 rounded"
-        >
-          Open Instagram
-        </a>
+              <a
+                href={instagramUrl}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="bg-purple-600 text-white px-3 py-1 rounded"
+              >
+                Open Instagram
+              </a>
+            </div>
+          ))}
+        </div>
       </div>
     </div>
   )
