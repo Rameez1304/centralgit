@@ -59,8 +59,12 @@ export default function ReviewPageClient({
   const handleCopyAndRedirect = async () => {
     await navigator.clipboard.writeText(review)
 
+    console.log('Google URL:', business?.google_review_url)
+
     if (business?.google_review_url) {
-      window.open(business.google_review_url, '_blank')
+      window.location.href = business.google_review_url
+    } else {
+      alert('Google review link missing')
     }
   }
 
