@@ -1,10 +1,10 @@
 'use client'
 
 import { useState } from 'react'
-import { QRCodeCanvas } from 'qrcode.react'
 
 export default function InstagramPage() {
   const [postUrl, setPostUrl] = useState('')
+  const [qrUrl, setQrUrl] = useState('')
   const [comment, setComment] = useState('')
 
   const comments = [
@@ -14,6 +14,21 @@ export default function InstagramPage() {
     'Very useful 🙌',
     'Great content 🚀'
   ]
+
+  async function generateQR() {
+    if (!postUrl) return
+
+    const res = await fetch('/api/generate-qr', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({ url: postUrl })
+    })
+
+    const data = await res.json()
+    setQrUrl(data.qrCodeUrl)
+  }
 
   function generateComment() {
     const random =
@@ -39,21 +54,30 @@ export default function InstagramPage() {
         className="w-full border p-3 rounded mb-4"
       />
 
-      {postUrl && (
-        <div className="mb-6">
-          <QRCodeCanvas value={postUrl} size={220} />
-        </div>
+      <button
+        onClick={generateQR}
+        className="bg-black text-white px-4 py-2 rounded mb-4"
+      >
+        Generate QR
+      </button>
+
+      {qrUrl && (
+        <img
+          src={qrUrl}
+          alt="QR Code"
+          className="w-56 h-56 mb-4"
+        />
       )}
 
       <button
         onClick={generateComment}
-        className="bg-black text-white px-4 py-2 rounded"
+        className="bg-blue-600 text-white px-4 py-2 rounded mb-4"
       >
         Generate Comment
       </button>
 
       {comment && (
-        <div className="mt-4">
+        <div>
           <textarea
             value={comment}
             readOnly
@@ -70,7 +94,7 @@ export default function InstagramPage() {
           <a
             href={postUrl}
             target="_blank"
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="bg-purple-600 text-white px-4 py-2 rounded"
           >
             Open Instagram
           </a>
