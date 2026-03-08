@@ -20,23 +20,25 @@ export async function POST(req: NextRequest) {
     const response = await ai.models.generateContent({
       model: 'gemini-2.5-flash',
       contents: `
-Write one short Instagram comment for a customer reacting naturally to a business called "${businessName}".
+Write one short natural Instagram comment for a real customer reacting to "${businessName}".
 
 Rules:
-- human tone
-- short
-- natural
+- 4 to 8 words only
+- natural human tone
 - no hashtags
 - no quotation marks
+- no emojis overload
+- sound genuine
       `,
     })
 
-    const comment = response.text?.trim() || 'Loved this ❤️'
+    const comment =
+      response.text?.trim() || 'Looks amazing ❤️'
 
     return NextResponse.json({ comment })
 
   } catch (err) {
-    console.error(err)
+    console.error('[generate-instagram-comment]', err)
 
     return NextResponse.json(
       { error: 'Internal server error' },
