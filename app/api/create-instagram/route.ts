@@ -38,8 +38,11 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const pageUrl =
-      `https://www.standeekart.com/instagram/${slug}`
+    const appUrl =
+      process.env.NEXT_PUBLIC_APP_URL ||
+      'https://www.standeekart.com'
+
+    const pageUrl = `${appUrl}/instagram/${slug}`
 
     const qrDataUrl = await QRCode.toDataURL(pageUrl)
 
