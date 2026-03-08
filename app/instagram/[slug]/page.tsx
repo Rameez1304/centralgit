@@ -1,30 +1,52 @@
-import { supabase } from '@/lib/supabase'
+'use client'
 
-export default async function InstagramSlugPage({
+import { useEffect, useState } from 'react'
+
+export default function InstagramSlugPage({
   params,
 }: {
   params: { slug: string }
 }) {
-  const { data, error } = await supabase
-    .from('instagram_links')
-    .select('*')
-    .eq('slug', params.slug)
-    .single()
+  const [instagramUrl, setInstagramUrl] = useState('')
+  const [comment, setComment] = useState('')
 
-  if (error || !data) {
+  useEffect(() => {
+    async function load() {
+      const res = await fetch(`/api/instagram-link/${params.slug}`)
+      const data = await res.json()
+
+      if (data?.instagram_url) {
+        setInstagramUrl(data.instagram_url)
+      }
+
+      const ai = await fetch('/api/generate-instagram-comment', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({
+          businessName: 'Cafe'
+        })
+      })
+
+      const aiData = await ai.json()
+      setComment(aiData.comment)
+    }
+
+    load()
+  }, [params.slug])
+
+  function copyComment() {
+    navigator.clipboard.writeText(comment)
+  }
+
+  if (!instagramUrl) {
     return (
       <div className="min-h-screen flex items-center justify-center">
-        <div className="text-center">
-          <h1 className="text-2xl font-bold mb-2">
-            Page not found
-          </h1>
-          <p>This QR code or page doesn't exist.</p>
-        </div>
+        Loading...
       </div>
     )
   }
-
-  const comment = 'Loved this ❤️'
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-white px-6">
@@ -40,15 +62,16 @@ export default async function InstagramSlugPage({
         />
 
         <button
-          onClick={() => navigator.clipboard.writeText(comment)}
+          onClick={copyComment}
           className="bg-green-600 text-white px-4 py-2 rounded mr-2"
         >
           Copy
         </button>
 
         <a
-          href={data.instagram_url}
+          href={instagramUrl}
           target="_blank"
+          rel="noopener noreferrer"
           className="bg-purple-600 text-white px-4 py-2 rounded"
         >
           Open Instagram
