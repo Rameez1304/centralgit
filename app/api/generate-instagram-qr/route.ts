@@ -1,5 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server'
 import QRCode from 'qrcode'
+import { supabase } from '@/lib/supabase'
+import { generateUniqueSlug } from '@/lib/utils'
 
 export async function POST(req: NextRequest) {
   try {
@@ -13,7 +15,28 @@ export async function POST(req: NextRequest) {
       )
     }
 
-    const qrDataUrl = await QRCode.toDataURL(url, {
+    const slug = generateUniqueSlug('instagram')
+
+    const { error } = await supabase
+      .from('instagram_links')
+      .insert({
+        slug,
+        instagram_url: url
+      })
+
+    if (error) {
+      console.error(error)
+
+      return NextResponse.json(
+        { error: 'Database insert failed' },
+        { status: 500 }
+      )
+    }
+
+    const landingUrl =
+      `https://www.standeekart.com/instagram/${slug}`
+
+    const qrDataUrl = await QRCode.toDataURL(landingUrl, {
       width: 400,
       margin: 2,
       color: {
@@ -23,7 +46,10 @@ export async function POST(req: NextRequest) {
       errorCorrectionLevel: 'H'
     })
 
-    return NextResponse.json({ qrDataUrl })
+    return NextResponse.json({
+      qrDataUrl,
+      slug
+    })
   } catch (err) {
     console.error(err)
 
