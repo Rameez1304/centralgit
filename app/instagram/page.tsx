@@ -7,6 +7,7 @@ export default function InstagramPage() {
   const [category, setCategory] = useState('')
   const [instagramUrl, setInstagramUrl] = useState('')
   const [qrUrl, setQrUrl] = useState('')
+  const [landingUrl, setLandingUrl] = useState('')
 
   async function generateQR() {
     const res = await fetch('/api/create-instagram', {
@@ -22,7 +23,16 @@ export default function InstagramPage() {
     })
 
     const data = await res.json()
+
     setQrUrl(data.qrDataUrl)
+
+    setLandingUrl(
+      `https://www.standeekart.com/instagram/${data.slug}`
+    )
+  }
+
+  function copyLink() {
+    navigator.clipboard.writeText(landingUrl)
   }
 
   return (
@@ -32,20 +42,23 @@ export default function InstagramPage() {
       </h1>
 
       <input
+        type="text"
         placeholder="Business name"
         value={businessName}
         onChange={(e) => setBusinessName(e.target.value)}
-        className="w-full border p-3 rounded mb-3"
+        className="w-full border p-3 rounded mb-4"
       />
 
       <input
+        type="text"
         placeholder="Category (Cafe, Retail...)"
         value={category}
         onChange={(e) => setCategory(e.target.value)}
-        className="w-full border p-3 rounded mb-3"
+        className="w-full border p-3 rounded mb-4"
       />
 
       <input
+        type="text"
         placeholder="Instagram post URL"
         value={instagramUrl}
         onChange={(e) => setInstagramUrl(e.target.value)}
@@ -54,13 +67,30 @@ export default function InstagramPage() {
 
       <button
         onClick={generateQR}
-        className="bg-black text-white px-4 py-2 rounded"
+        className="bg-black text-white px-4 py-2 rounded mb-4"
       >
         Generate QR
       </button>
 
       {qrUrl && (
-        <img src={qrUrl} className="w-56 h-56 mt-4" />
+        <>
+          <img
+            src={qrUrl}
+            alt="QR"
+            className="w-56 h-56 mb-4"
+          />
+
+          <div className="border p-3 rounded mb-3 break-all text-sm">
+            {landingUrl}
+          </div>
+
+          <button
+            onClick={copyLink}
+            className="bg-blue-600 text-white px-4 py-2 rounded"
+          >
+            Copy Link
+          </button>
+        </>
       )}
     </div>
   )
