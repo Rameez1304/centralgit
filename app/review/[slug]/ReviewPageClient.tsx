@@ -38,15 +38,15 @@ export default function ReviewPageClient({
 
       {!rating && (
         <>
-          <h2 className="text-xl font-bold mb-4 text-center">
+          <h2 className="text-2xl font-bold mb-2 text-center">
             {business?.name}
           </h2>
 
           <p className="text-center text-gray-500 mb-6">
-            How was your experience?
+            {business?.category || 'How was your experience?'}
           </p>
 
-          <div className="flex justify-center gap-3">
+          <div className="flex justify-center gap-3 mb-4">
             {[1, 2, 3, 4, 5].map((star) => (
               <button
                 key={star}
@@ -54,12 +54,16 @@ export default function ReviewPageClient({
                   setRating(star)
                   if (star >= 4) generateAIReview(star)
                 }}
-                className="text-4xl"
+                className="text-4xl hover:scale-110 transition"
               >
                 ⭐
               </button>
             ))}
           </div>
+
+          <p className="text-center text-sm text-gray-400">
+            Tap a star to continue
+          </p>
         </>
       )}
 
