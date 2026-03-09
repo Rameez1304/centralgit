@@ -37,12 +37,18 @@ export default function WhatsAppQRResult({ phone, name }: Props) {
 
       qr.onload = () => {
         ctx.textAlign = 'center'
-        ctx.fillStyle = 'black'
-        ctx.font = 'bold 34px Arial'
 
-        ctx.fillText(name, 400, 300)
+        // business name
+        ctx.font = 'bold 42px Arial'
+        ctx.fillStyle = 'white'
+        ctx.fillText(name, 400, 250)
 
-        ctx.drawImage(qr, 220, 380, 360, 360)
+        // white QR box
+        ctx.fillStyle = 'white'
+        ctx.fillRect(180, 300, 440, 440)
+
+        // QR inside white box
+        ctx.drawImage(qr, 220, 340, 360, 360)
 
         const finalImage = canvas.toDataURL('image/png')
         setPosterUrl(finalImage)
@@ -54,7 +60,11 @@ export default function WhatsAppQRResult({ phone, name }: Props) {
     <div className="mt-6">
       {posterUrl && (
         <>
-          <img src={posterUrl} alt="WhatsApp Poster" className="rounded-lg border" />
+          <img
+            src={posterUrl}
+            alt="WhatsApp Poster"
+            className="rounded-lg border"
+          />
 
           <a
             href={posterUrl}
