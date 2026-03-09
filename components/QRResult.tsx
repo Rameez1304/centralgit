@@ -9,6 +9,7 @@ type Business = {
   google_review_link?: string
   tone?: string
   slug: string
+  instagram_username?: string
 }
 
 type CreateBusinessResponse = {
@@ -25,10 +26,15 @@ type Props = {
 export default function QRResult({ business, result, onReset }: Props) {
   const finalBusiness = business || result?.business
   const [posterUrl, setPosterUrl] = useState('')
+  const [template, setTemplate] = useState<'google' | 'instagram'>('google')
 
   if (!finalBusiness) return null
 
-  const qrUrl = `https://www.standeekart.com/review/${finalBusiness.slug}`
+  const qrUrl =
+    template === 'google'
+      ? `https://www.standeekart.com/review/${finalBusiness.slug}`
+      : `https://www.instagram.com/${finalBusiness.instagram_username || finalBusiness.slug}`
+
   const qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(qrUrl)}`
 
   useEffect(() => {
@@ -46,7 +52,10 @@ export default function QRResult({ business, result, onReset }: Props) {
     bg.crossOrigin = 'anonymous'
     qr.crossOrigin = 'anonymous'
 
-    bg.src = '/templates/google-review-template.png'
+    bg.src =
+      template === 'google'
+        ? '/templates/google-review-template.png'
+        : '/templates/instagram-template.png'
 
     bg.onload = () => {
       ctx.drawImage(bg, 0, 0, canvas.width, canvas.height)
@@ -54,51 +63,81 @@ export default function QRResult({ business, result, onReset }: Props) {
       qr.src = qrImage
 
       qr.onload = () => {
-        ctx.font = 'bold 28px serif'
-        ctx.fillStyle = 'black'
         ctx.textAlign = 'center'
 
-        // business name
-        ctx.fillText(
-          finalBusiness.business_name.toUpperCase(),
-          400,
-          430
-        )
+        if (template === 'google') {
+          ctx.font = 'bold 28px serif'
+          ctx.fillStyle = 'black'
 
-        // QR centered
-        ctx.drawImage(qr, 210, 460, 380, 380)
-     
+          ctx.fillText(
+            finalBusiness.business_name.toUpperCase(),
+            400,
+            430
+          )
+
+          ctx.drawImage(qr, 210, 460, 380, 380)
+        }
+
+        if (template === 'instagram') {
+          ctx.font = 'bold 30px Arial'
+          ctx.fillStyle = 'white'
+
+          ctx.drawImage(qr, 220, 360, 360, 360)
+
+          ctx.fillText(
+            `@${finalBusiness.instagram_username || finalBusiness.slug}`,
+            400,
+            980
+          )
+        }
+
         const finalImage = canvas.toDataURL('image/png')
         setPosterUrl(finalImage)
       }
-
-      qr.onerror = () => {
-        console.error('QR image failed to load')
-      }
     }
-
-    bg.onerror = () => {
-      console.error('Background image failed to load')
-    }
-  }, [finalBusiness.business_name, finalBusiness.slug, qrImage])
+  }, [
+    finalBusiness.business_name,
+    finalBusiness.slug,
+    finalBusiness.instagram_username,
+    qrImage,
+    template,
+  ])
 
   return (
     <div className="rounded-xl border p-6 shadow-sm bg-white">
       <h2 className="text-xl font-semibold mb-4">QR Generated Successfully</h2>
 
-      <p className="mb-2">
-        <strong>Business:</strong> {finalBusiness.business_name}
-      </p>
+      <div className="flex gap-3 mb-4">
+        <button
+          onClick={() => setTemplate('google')}
+          className={`px-4 py-2 rounded ${
+            template === 'google' ? 'bg-black text-white' : 'border'
+          }`}
+        >
+          Google Poster
+        </button>
 
-      <p className="mb-4">
-        <strong>Review Page:</strong>
-      </p>
+        <button
+          onClick={() => setTemplate('instagram')}
+          className={`px-4 py-2 rounded ${
+            template === 'instagram' ? 'bg-black text-white' : 'border'
+          }`}
+        >
+          Instagram Poster
+        </button>
+      </div>
 
-      <img
-        src={qrImage}
-        alt="QR Code"
-        className="mb-4"
-      />
+      {template === 'google' && (
+        <p className="mb-2">
+          <strong>Business:</strong> {finalBusiness.business_name}
+        </p>
+      )}
+
+      {template === 'instagram' && (
+        <p className="mb-2">
+          <strong>Instagram:</strong> @{finalBusiness.instagram_username || finalBusiness.slug}
+        </p>
+      )}
 
       {posterUrl && (
         <div className="mt-6">
@@ -112,7 +151,7 @@ export default function QRResult({ business, result, onReset }: Props) {
 
           <a
             href={posterUrl}
-            download={`${finalBusiness.slug}-poster.png`}
+            download={`${finalBusiness.slug}-${template}.png`}
             className="block mt-3 w-full bg-black text-white py-2 rounded text-center"
           >
             Download Poster
@@ -121,7 +160,7 @@ export default function QRResult({ business, result, onReset }: Props) {
       )}
 
       <div className="mt-4 text-center">
-        <p className="text-sm text-gray-500 mb-2">Shareable Review Link</p>
+        <p className="text-sm text-gray-500 mb-2">Shareable Link</p>
 
         <div className="border rounded-lg p-3 bg-gray-50 break-all text-sm">
           {qrUrl}
