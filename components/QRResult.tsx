@@ -67,15 +67,7 @@ export default function QRResult({ business, result, onReset }: Props) {
 
         // QR centered
         ctx.drawImage(qr, 240, 430, 320, 320)
-
-        // short link
-        ctx.font = '20px Arial'
-        ctx.fillText(
-          `standeekart.com/${finalBusiness.slug}`,
-          400,
-          790
-        )
-
+     
         const finalImage = canvas.toDataURL('image/png')
         setPosterUrl(finalImage)
       }
