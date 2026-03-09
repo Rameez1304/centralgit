@@ -18,18 +18,14 @@ export default function HomePage() {
             </span>
           </div>
 
-          <div className="hidden md:flex items-center gap-8">
-            <a href="#how-it-works" className="text-sm text-[#888] hover:text-[#0D0D0D]">
-              How it works
-            </a>
-
+          <div className="hidden md:flex items-center gap-6">
             <Link href="/instagram" className="text-sm text-[#888] hover:text-[#0D0D0D]">
               Instagram QR
             </Link>
 
-            <a href="#pricing" className="text-sm text-[#888] hover:text-[#0D0D0D]">
-              Pricing
-            </a>
+            <Link href="/whatsapp" className="text-sm text-[#888] hover:text-[#0D0D0D]">
+              WhatsApp QR
+            </Link>
 
             <a
               href="#create"
@@ -42,50 +38,51 @@ export default function HomePage() {
       </nav>
 
       {/* HERO */}
-      <section className="relative pt-32 pb-24 px-6 overflow-hidden">
-        <div className="relative max-w-4xl mx-auto text-center">
+      <section className="relative pt-28 pb-20 px-6">
+        <div className="max-w-4xl mx-auto text-center">
 
-          <h1 className="text-5xl md:text-7xl font-bold text-[#0D0D0D] mb-6">
-            Turn Customer Scans<br />
-            Into Reviews & Comments
+          <h1 className="text-5xl md:text-6xl font-bold text-[#0D0D0D] leading-tight mb-5">
+            Turn Customer Scans
+            <br />
+            Into Reviews & Engagement
           </h1>
 
-          <p className="text-lg md:text-xl text-[#666] max-w-2xl mx-auto mb-10">
-            Generate AI-powered QR codes for Google reviews and Instagram engagement.
+          <p className="text-lg text-[#666] max-w-2xl mx-auto mb-8">
+            Create QR posters for Google reviews, Instagram engagement, and WhatsApp chat.
           </p>
 
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
 
             <a
               href="#create"
-              className="inline-flex items-center justify-center gap-2 bg-[#0D0D0D] text-white px-8 py-4 rounded-full text-sm font-semibold"
+              className="inline-flex items-center justify-center bg-[#0D0D0D] text-white px-8 py-4 rounded-full text-sm font-semibold"
             >
-              Generate Google QR
+              Google QR
             </a>
 
             <Link
               href="/instagram"
-              className="inline-flex items-center justify-center gap-2 bg-[#1A56DB] text-white px-8 py-4 rounded-full text-sm font-semibold"
+              className="inline-flex items-center justify-center bg-[#1A56DB] text-white px-8 py-4 rounded-full text-sm font-semibold"
             >
               Instagram QR
             </Link>
 
-            <a
-              href="#how-it-works"
-              className="inline-flex items-center justify-center gap-2 bg-white border border-[#E8E8E8] px-8 py-4 rounded-full text-sm font-semibold"
+            <Link
+              href="/whatsapp"
+              className="inline-flex items-center justify-center bg-[#25D366] text-white px-8 py-4 rounded-full text-sm font-semibold"
             >
-              See how it works
-            </a>
+              WhatsApp QR
+            </Link>
 
           </div>
         </div>
       </section>
 
-      {/* BUSINESS FORM */}
-      <section id="create" className="py-24 px-6 bg-white">
+      {/* QR OPTIONS */}
+      <section id="create" className="py-16 px-6 bg-white">
         <div className="max-w-2xl mx-auto">
 
-          <div className="grid md:grid-cols-2 gap-4 mb-8">
+          <div className="grid md:grid-cols-3 gap-4 mb-8">
 
             <div className="border border-[#E8E8E8] rounded-2xl p-6">
               <h3 className="text-lg font-semibold mb-2">Google Review QR</h3>
@@ -100,7 +97,17 @@ export default function HomePage() {
             >
               <h3 className="text-lg font-semibold mb-2">Instagram QR</h3>
               <p className="text-sm text-[#666]">
-                Generate QR for Instagram posts with AI comments.
+                QR posters for Instagram engagement.
+              </p>
+            </Link>
+
+            <Link
+              href="/whatsapp"
+              className="border border-[#E8E8E8] rounded-2xl p-6 hover:shadow-lg transition-all"
+            >
+              <h3 className="text-lg font-semibold mb-2">WhatsApp QR</h3>
+              <p className="text-sm text-[#666]">
+                Direct customers to WhatsApp instantly.
               </p>
             </Link>
 
