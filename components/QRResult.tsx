@@ -47,32 +47,48 @@ export default function QRResult({ business, result, onReset }: Props) {
     qr.crossOrigin = 'anonymous'
 
     bg.src = '/templates/google-review-template.png'
-    qr.src = qrImage
 
     bg.onload = () => {
       ctx.drawImage(bg, 0, 0, canvas.width, canvas.height)
 
+      qr.src = qrImage
+
       qr.onload = () => {
-        ctx.font = 'bold 38px serif'
+        ctx.font = 'bold 28px serif'
         ctx.fillStyle = 'black'
         ctx.textAlign = 'center'
 
+        // business name
         ctx.fillText(
           finalBusiness.business_name.toUpperCase(),
           400,
-          320
+          390
         )
 
-        ctx.drawImage(qr, 220, 380, 360, 360)
+        // QR centered
+        ctx.drawImage(qr, 240, 430, 320, 320)
 
-        ctx.font = '22px Arial'
-        ctx.fillText(qrUrl, 400, 790)
+        // short link
+        ctx.font = '20px Arial'
+        ctx.fillText(
+          `standeekart.com/${finalBusiness.slug}`,
+          400,
+          790
+        )
 
         const finalImage = canvas.toDataURL('image/png')
         setPosterUrl(finalImage)
       }
+
+      qr.onerror = () => {
+        console.error('QR image failed to load')
+      }
     }
-  }, [finalBusiness.business_name, qrImage, qrUrl])
+
+    bg.onerror = () => {
+      console.error('Background image failed to load')
+    }
+  }, [finalBusiness.business_name, finalBusiness.slug, qrImage])
 
   return (
     <div className="rounded-xl border p-6 shadow-sm bg-white">
