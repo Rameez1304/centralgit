@@ -38,7 +38,7 @@ export default function InstagramQRResult({ username, slug }: Props) {
       qr.onload = () => {
         ctx.textAlign = 'center'
         ctx.fillStyle = 'white'
-        ctx.font = 'bold 28px Arial'
+        ctx.font = 'bold 38px Arial'
 
         // username above white box
         ctx.fillText(
@@ -47,8 +47,8 @@ export default function InstagramQRResult({ username, slug }: Props) {
           300
         )
 
-        // QR smaller and centered
-        ctx.drawImage(qr, 250, 360, 300, 300)
+        // QR lower with original strong size
+        ctx.drawImage(qr, 220, 400, 360, 360)
 
         const finalImage = canvas.toDataURL('image/png')
         setPosterUrl(finalImage)
