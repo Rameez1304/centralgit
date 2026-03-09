@@ -1,6 +1,7 @@
 'use client'
 
 import { useState } from 'react'
+import InstagramQRResult from '@/components/InstagramQRResult'
 
 export default function InstagramPage() {
   const [businessName, setBusinessName] = useState('')
@@ -8,6 +9,7 @@ export default function InstagramPage() {
   const [instagramUrl, setInstagramUrl] = useState('')
   const [qrUrl, setQrUrl] = useState('')
   const [landingUrl, setLandingUrl] = useState('')
+  const [slug, setSlug] = useState('')
 
   async function generateQR() {
     const res = await fetch('/api/create-instagram', {
@@ -25,6 +27,7 @@ export default function InstagramPage() {
     const data = await res.json()
 
     setQrUrl(data.qrDataUrl)
+    setSlug(data.slug)
 
     setLandingUrl(
       `https://www.standeekart.com/instagram/${data.slug}`
@@ -86,10 +89,15 @@ export default function InstagramPage() {
 
           <button
             onClick={copyLink}
-            className="bg-blue-600 text-white px-4 py-2 rounded"
+            className="bg-blue-600 text-white px-4 py-2 rounded mb-4"
           >
             Copy Link
           </button>
+
+          <InstagramQRResult
+            username={businessName}
+            slug={slug}
+          />
         </>
       )}
     </div>
