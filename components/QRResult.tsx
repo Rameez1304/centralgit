@@ -66,7 +66,7 @@ export default function QRResult({ business, result, onReset }: Props) {
         )
 
         // QR centered
-        ctx.drawImage(qr, 240, 470, 320, 320)
+        ctx.drawImage(qr, 210, 460, 380, 380)
      
         const finalImage = canvas.toDataURL('image/png')
         setPosterUrl(finalImage)
