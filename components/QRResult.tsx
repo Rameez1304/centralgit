@@ -1,4 +1,6 @@
-import React from 'react'
+'use client'
+
+import React, { useEffect, useState } from 'react'
 
 type Business = {
   id?: string
@@ -22,10 +24,55 @@ type Props = {
 
 export default function QRResult({ business, result, onReset }: Props) {
   const finalBusiness = business || result?.business
+  const [posterUrl, setPosterUrl] = useState('')
 
   if (!finalBusiness) return null
 
   const qrUrl = `https://www.standeekart.com/review/${finalBusiness.slug}`
+  const qrImage = `https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(qrUrl)}`
+
+  useEffect(() => {
+    const canvas = document.createElement('canvas')
+    const ctx = canvas.getContext('2d')
+
+    if (!ctx) return
+
+    canvas.width = 800
+    canvas.height = 1200
+
+    const bg = new Image()
+    const qr = new Image()
+
+    bg.crossOrigin = 'anonymous'
+    qr.crossOrigin = 'anonymous'
+
+    bg.src = '/templates/google-review-template.png'
+    qr.src = qrImage
+
+    bg.onload = () => {
+      ctx.drawImage(bg, 0, 0, canvas.width, canvas.height)
+
+      qr.onload = () => {
+        ctx.font = 'bold 38px serif'
+        ctx.fillStyle = 'black'
+        ctx.textAlign = 'center'
+
+        ctx.fillText(
+          finalBusiness.business_name.toUpperCase(),
+          400,
+          320
+        )
+
+        ctx.drawImage(qr, 220, 380, 360, 360)
+
+        ctx.font = '22px Arial'
+        ctx.fillText(qrUrl, 400, 790)
+
+        const finalImage = canvas.toDataURL('image/png')
+        setPosterUrl(finalImage)
+      }
+    }
+  }, [finalBusiness.business_name, qrImage, qrUrl])
 
   return (
     <div className="rounded-xl border p-6 shadow-sm bg-white">
@@ -40,10 +87,30 @@ export default function QRResult({ business, result, onReset }: Props) {
       </p>
 
       <img
-        src={`https://api.qrserver.com/v1/create-qr-code/?size=200x200&data=${encodeURIComponent(qrUrl)}`}
+        src={qrImage}
         alt="QR Code"
         className="mb-4"
       />
+
+      {posterUrl && (
+        <div className="mt-6">
+          <p className="text-sm text-gray-500 mb-2">Poster Preview</p>
+
+          <img
+            src={posterUrl}
+            alt="QR Poster"
+            className="rounded-lg border"
+          />
+
+          <a
+            href={posterUrl}
+            download={`${finalBusiness.slug}-poster.png`}
+            className="block mt-3 w-full bg-black text-white py-2 rounded text-center"
+          >
+            Download Poster
+          </a>
+        </div>
+      )}
 
       <div className="mt-4 text-center">
         <p className="text-sm text-gray-500 mb-2">Shareable Review Link</p>
@@ -70,7 +137,7 @@ export default function QRResult({ business, result, onReset }: Props) {
       </div>
 
       <a
-        href={`https://api.qrserver.com/v1/create-qr-code/?size=500x500&data=${encodeURIComponent(qrUrl)}`}
+        href={qrImage}
         download
         className="inline-block rounded-lg px-4 py-2 border mr-3 mt-4"
       >
